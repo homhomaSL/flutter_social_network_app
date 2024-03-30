@@ -17,6 +17,8 @@ class AnotherUserProfile extends StatefulWidget {
 }
 
 class _AnotherUserProfileState extends State<AnotherUserProfile> {
+  void sendFriendRequest() {}
+
   void friendRequestDialog() {
     showDialog(
       context: context,
@@ -35,6 +37,7 @@ class _AnotherUserProfileState extends State<AnotherUserProfile> {
                   )),
               TextButton(
                 onPressed: () {
+                  sendFriendRequest;
                   Get.back();
                 },
                 child: Text(
