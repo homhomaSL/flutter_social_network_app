@@ -33,8 +33,10 @@ class SearchPage extends StatelessWidget {
                       final userData = doc.data()! as Map<String, dynamic>;
                       if (currentUser.email != userData['email']) {
                         return UserSearchTile(
-                            userEmail: userData['email'],
-                            username: userData['username']);
+                          userEmail: userData['email'],
+                          username: userData['username'],
+                          uid: userData['uid'],
+                        );
                       } else {
                         return const Row();
                       }

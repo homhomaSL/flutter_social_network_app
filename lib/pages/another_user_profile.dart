@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_network_app/components/text_box.dart';
 import 'package:get/get.dart';
@@ -6,10 +7,13 @@ import 'package:get/get.dart';
 class AnotherUserProfile extends StatefulWidget {
   final String userEmail;
   final String username;
+  final String uid;
+  //final String bio;
   const AnotherUserProfile({
     super.key,
     required this.userEmail,
     required this.username,
+    required this.uid,
   });
 
   @override
@@ -17,7 +21,7 @@ class AnotherUserProfile extends StatefulWidget {
 }
 
 class _AnotherUserProfileState extends State<AnotherUserProfile> {
-  void sendFriendRequest() {}
+  final currentUser = FirebaseAuth.instance.currentUser!;
 
   void friendRequestDialog() {
     showDialog(
@@ -36,8 +40,14 @@ class _AnotherUserProfileState extends State<AnotherUserProfile> {
                         color: Theme.of(context).colorScheme.inversePrimary),
                   )),
               TextButton(
-                onPressed: () {
-                  sendFriendRequest;
+                onPressed: () async {
+                  FirebaseFirestore.instance.collection('Requests').add({
+                    'ReceiverEmail': widget.userEmail,
+                    'SenderEmail': currentUser.email,
+                    'uid': widget.uid,
+                    'username': widget.username,
+                    'Timestamp': Timestamp.now(),
+                  });
                   Get.back();
                 },
                 child: Text(
@@ -62,8 +72,7 @@ class _AnotherUserProfileState extends State<AnotherUserProfile> {
           Padding(
             padding: const EdgeInsets.only(right: 15),
             child: IconButton(
-                onPressed: friendRequestDialog,
-                icon: const Icon(Icons.person_add)),
+                onPressed: () {}, icon: const Icon(Icons.person_add)),
           )
         ],
       ),

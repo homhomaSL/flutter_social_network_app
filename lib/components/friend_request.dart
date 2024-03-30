@@ -1,7 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FriendRequest extends StatelessWidget {
-  const FriendRequest({super.key});
+  final String friendEmail;
+  final String requestDataId;
+  final String uid;
+  final String username;
+  const FriendRequest({
+    super.key,
+    required this.requestDataId,
+    required this.uid,
+    required this.username,
+    required this.friendEmail,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +25,32 @@ class FriendRequest extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            children: [Text('data')],
+            children: [Text(username)],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(onPressed: () {}, child: Text('Reject')),
-              TextButton(onPressed: () {}, child: Text('Accept'))
+              TextButton(
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection('Requests')
+                        .doc(requestDataId)
+                        .delete();
+                  },
+                  child: Text('Reject')),
+              TextButton(
+                  onPressed: () async {
+                    FirebaseFirestore.instance.collection('Friends').add({
+                      'uid': uid,
+                      'username': username,
+                      'friendEmail': friendEmail,
+                    });
+                    FirebaseFirestore.instance
+                        .collection('Requests')
+                        .doc(requestDataId)
+                        .delete();
+                  },
+                  child: Text('Accept'))
             ],
           )
         ],
